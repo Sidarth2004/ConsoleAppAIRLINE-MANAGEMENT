@@ -1,0 +1,77 @@
+﻿CREATE DATABASE FlyWithMeDB;
+GO
+USE FlyWithMeDB;
+GO
+
+CREATE TABLE Admin
+(
+    AdminId INT IDENTITY(1,1) PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(100) NOT NULL
+);
+
+INSERT INTO Admin (Username, Password)
+VALUES ('admin', 'admin123');
+
+CREATE TABLE Flight
+(
+    FlightId INT IDENTITY(1,1) PRIMARY KEY,
+
+    DepAirport VARCHAR(50) NOT NULL,
+    DepDate DATE NOT NULL,
+    DepTime TIME NOT NULL,
+
+    ArrAirport VARCHAR(50) NOT NULL,
+    ArrDate DATE NOT NULL,
+    ArrTime TIME NOT NULL
+);
+
+INSERT INTO Flight
+(DepAirport, DepDate, DepTime, ArrAirport, ArrDate, ArrTime)
+VALUES
+('COK', '2026-02-01', '10:30:00', 'DEL', '2026-02-01', '13:15:00'),
+('BLR', '2026-02-02', '09:00:00', 'MUM', '2026-02-02', '11:45:00');
+
+SELECT * FROM Flight;
+
+SELECT * FROM Flight
+WHERE FlightId = 1;
+
+INSERT INTO Flight
+(DepAirport, DepDate, DepTime, ArrAirport, ArrDate, ArrTime)
+VALUES
+('HYD', '2026-02-05', '08:15:00', 'COK', '2026-02-05', '10:30:00');
+
+UPDATE Flight
+SET
+    DepAirport = 'TRV',
+    DepDate = '2026-02-06',
+    DepTime = '11:00:00',
+    ArrAirport = 'DEL',
+    ArrDate = '2026-02-06',
+    ArrTime = '14:00:00'
+WHERE FlightId = 1;
+
+DELETE FROM Flight
+WHERE FlightId = 2;
+
+SELECT * FROM Admin
+WHERE Username = 'admin'
+AND Password = 'admin123';
+
+CREATE INDEX IX_Flight_FlightId ON Flight(FlightId);
+
+CREATE PROCEDURE AddFlight
+(
+    @DepAirport VARCHAR(50),
+    @DepDate DATE,
+    @DepTime TIME,
+    @ArrAirport VARCHAR(50),
+    @ArrDate DATE,
+    @ArrTime TIME
+)
+AS
+BEGIN
+    INSERT INTO Flight
+    VALUES (@DepAirport, @DepDate, @DepTime, @ArrAirport, @ArrDate, @ArrTime);
+END;
